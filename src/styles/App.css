@@ -1,0 +1,10 @@
+.app {
+    text-align: center;
+    padding: 20px;
+}
+input {
+    margin-bottom: 10px;
+}
+.error {
+    color: red;
+}
