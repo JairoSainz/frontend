@@ -13,8 +13,17 @@ const App = () => {
         setLoading(true);
         setError('');
         setDownloadLink('');
+        
+        // Validación básica de URL
+        const urlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+        if (!urlPattern.test(url)) {
+            setError('Por favor, ingresa una URL válida de YouTube.');
+            setLoading(false);
+            return;
+        }
+
         try {
-            // Aquí es donde haces la solicitud al backend
+            // Realizamos la solicitud al backend
             const response = await axios.post('https://backend-7rhr.onrender.com/convert', {
                 url,
                 format,
@@ -25,7 +34,9 @@ const App = () => {
             const link = URL.createObjectURL(blob);
             setDownloadLink(link);
         } catch (err) {
-            setError('Error al convertir el video.');
+            // Muestra el error detallado si está disponible
+            const errorMessage = err.response ? err.response.data.error : 'Error al convertir el video.';
+            setError(errorMessage);
         }
         setLoading(false);
     };
@@ -46,6 +57,7 @@ const App = () => {
                         value="mp3"
                         checked={format === 'mp3'}
                         onChange={() => setFormat('mp3')}
+                        disabled={loading}
                     />
                     MP3
                 </label>
@@ -55,6 +67,7 @@ const App = () => {
                         value="mp4"
                         checked={format === 'mp4'}
                         onChange={() => setFormat('mp4')}
+                        disabled={loading}
                     />
                     MP4
                 </label>
